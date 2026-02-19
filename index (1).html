@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arthaniti Global Capital — Wealth Needs A Smarter Perspective</title>
+<meta name="description" content="SEBI Registered Research Analyst | ARN: 258773 | Mutual Funds · ETF Strategy · Unlisted Shares · Insurance | Mumbai">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --black:#080808; --dark:#0d0d0d; --panel:#111111;
+  --border:rgba(255,255,255,0.07);
+  --gold:#b8965a; --gold2:#d4af72; --white:#f5f2ee; --muted:#7a7570;
+  --green:#4caf87; --red:#c0504d;
+}
+body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:7px;height:7px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1px solid rgba(184,150,90,.3);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s ease;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:26px 64px;transition:all .4s;}
+nav.scrolled{padding:14px 64px;background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:500;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.logo-sub{font-size:.55rem;font-family:'Jost',sans-serif;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-top:1px;}
+.logo::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);flex-shrink:0;}
+.nav-r{display:flex;align-items:center;gap:32px;}
+.nav-r a{color:var(--muted);text-decoration:none;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;transition:color .3s;}
+.nav-r a:hover{color:var(--white);}
+.nav-cta{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(184,150,90,.35);padding:10px 22px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;}
+.nav-cta:hover{background:var(--gold);color:var(--black);}
+.hbg{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hbg span{display:block;width:22px;height:1px;background:var(--white);}
+.mob{display:none;position:fixed;inset:0;background:rgba(8,8,8,.98);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.mob.open{display:flex;}
+.mob a{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);text-decoration:none;}
+.mob a:hover{color:var(--gold);}
+.mob-x{position:absolute;top:24px;right:24px;background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;}
+
+/* ════════════════════════
+   HERO
+════════════════════════ */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+#cv{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+.h-ov{position:absolute;inset:0;z-index:1;
+  background:radial-gradient(ellipse 80% 50% at 50% 50%,rgba(8,8,8,.6) 0%,rgba(8,8,8,.9) 70%),
+  linear-gradient(180deg,rgba(8,8,8,.85) 0%,transparent 25%,transparent 72%,rgba(8,8,8,.95) 100%);}
+.h-con{position:relative;z-index:2;max-width:820px;padding:0 28px;}
+.h-eye{font-size:.56rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:26px;display:inline-flex;align-items:center;gap:14px;opacity:0;animation:fi 1s .4s forwards;}
+.h-eye::before,.h-eye::after{content:'';width:30px;height:1px;background:var(--gold);opacity:.5;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6.5vw,5.8rem);font-weight:400;line-height:1.06;margin-bottom:18px;opacity:0;animation:fu 1.2s .6s forwards;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.h-sub{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:44px;opacity:0;animation:fi 1s 1s forwards;}
+.h-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fi 1s 1.2s forwards;}
+.btn-w{font-size:.64rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--black);background:var(--white);border:1px solid var(--white);padding:13px 32px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-w:hover{background:transparent;color:var(--white);}
+.btn-o{font-size:.64rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border);padding:13px 32px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-o:hover{border-color:var(--gold);color:var(--gold);}
+.h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.52rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);z-index:2;opacity:0;animation:fi 1s 1.8s forwards;}
+.sc-ln{width:1px;height:40px;background:linear-gradient(var(--gold),transparent);animation:sp 2s infinite;}
+@keyframes sp{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+/* ════════════════════════
+   TICKER STRIP  (moves ✅, data is simulated)
+════════════════════════ */
+.ticker{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:11px 0;overflow:hidden;position:relative;}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:72px;z-index:1;}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--panel),transparent);}
+.ticker::after{right:0;background:linear-gradient(-90deg,var(--panel),transparent);}
+.t-track{display:flex;white-space:nowrap;animation:tick 30s linear infinite;}
+.ti{display:inline-flex;align-items:center;gap:8px;padding:0 28px;border-right:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.7rem;}
+.tn{color:var(--muted);letter-spacing:.8px;}
+.tv{color:var(--white);}
+.tu{color:var(--green);}
+.td{color:var(--red);}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ════════════════════════
+   STATS BAR
+════════════════════════ */
+.stats{background:var(--dark);padding:52px 64px;border-bottom:1px solid var(--border);}
+.stats-g{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.st{padding:0 40px;border-right:1px solid var(--border);text-align:center;}
+.st:first-child{padding-left:0;text-align:left;}
+.st:last-child{border-right:none;padding-right:0;text-align:right;}
+.st-n{font-family:'Playfair Display',serif;font-size:3rem;font-weight:400;color:var(--gold);line-height:1;}
+.st-l{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:7px;}
+
+/* ════════════════════════
+   SHARED SECTION STYLES
+════════════════════════ */
+.sp{padding:100px 64px;}
+.lbl{font-size:.54rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:inline-flex;align-items:center;gap:12px;}
+.lbl::before{content:'';width:20px;height:1px;background:var(--gold);}
+.sh{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.8vw,3.4rem);font-weight:400;line-height:1.08;margin-bottom:16px;}
+.sh em{font-style:italic;color:var(--gold);}
+.sp-txt{font-size:.84rem;font-weight:300;color:var(--muted);line-height:1.85;max-width:500px;}
+
+/* ════════════════════════
+   FOUNDER
+════════════════════════ */
+#founder{background:var(--black);}
+.f-wrap{display:grid;grid-template-columns:340px 1fr;border:1px solid var(--border);}
+.f-left{padding:60px 52px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:28px;}
+.f-photo{width:100%;aspect-ratio:4/5;background:var(--panel);border:1px solid var(--border);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.f-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,150,90,.05),transparent);}
+.f-photo-icon{font-family:'Playfair Display',serif;font-size:5rem;color:rgba(184,150,90,.15);font-style:italic;}
+.f-photo-hint{font-size:.56rem;color:rgba(122,117,112,.4);letter-spacing:1.5px;text-transform:uppercase;}
+.f-badges{display:flex;flex-direction:column;gap:8px;}
+.badge{font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(184,150,90,.18);padding:8px 14px;display:flex;align-items:center;gap:8px;}
+.badge::before{content:'✦';font-size:.45rem;opacity:.6;}
+.f-right{padding:60px 64px;background:var(--dark);}
+.f-name{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;margin-bottom:4px;}
+.f-title{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:36px;}
+.f-quote{font-family:'Playfair Display',serif;font-size:1.15rem;font-style:italic;line-height:1.65;padding-left:20px;border-left:2px solid var(--gold);margin-bottom:28px;color:var(--white);}
+.f-body{font-size:.84rem;color:var(--muted);line-height:1.9;font-weight:300;margin-bottom:32px;}
+.f-body strong{color:var(--white);font-weight:400;}
+.f-body em{color:var(--gold);font-style:normal;}
+.f-sign{font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;color:var(--gold);}
+.f-sign span{display:block;font-family:'Jost',sans-serif;font-size:.56rem;font-style:normal;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+
+/* ════════════════════════
+   SERVICES
+════════════════════════ */
+#services{background:var(--dark);}
+.svc-hd{text-align:center;margin-bottom:60px;}
+.svc-hd .lbl{justify-content:center;}
+.svc-g{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);}
+.svc-g2{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-top:none;}
+.si{padding:44px 36px;border-right:1px solid var(--border);position:relative;overflow:hidden;transition:background .4s;}
+.si:last-child{border-right:none;}
+.si::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .5s;}
+.si:hover{background:rgba(184,150,90,.03);}
+.si:hover::before{transform:scaleX(1);}
+.si-n{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:2px;margin-bottom:20px;display:block;}
+.si h3{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;margin-bottom:10px;line-height:1.2;}
+.si p{font-size:.8rem;color:var(--muted);line-height:1.78;font-weight:300;}
+.si a{display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:gap .3s;}
+.si a:hover{gap:14px;}
+.si a::after{content:'→';}
+
+/* ════════════════════════
+   CALCULATORS
+════════════════════════ */
+#tools{background:var(--black);}
+.calc-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:44px;}
+.tabs{display:flex;border:1px solid var(--border);}
+.tab{padding:10px 20px;background:transparent;border:none;border-right:1px solid var(--border);color:var(--muted);font-family:'Jost',sans-serif;font-size:.64rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .22s;}
+.tab:last-child{border-right:none;}
+.tab.on{background:var(--gold);color:var(--black);font-weight:500;}
+.tab:hover:not(.on){color:var(--gold);}
+.cw{display:none;grid-template-columns:1fr 1fr;}
+.cw.on{display:grid;}
+.c-in{padding:48px;border:1px solid var(--border);}
+.c-in h3{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:400;margin-bottom:5px;}
+.c-in p{font-size:.76rem;color:var(--muted);margin-bottom:36px;line-height:1.65;}
+.fld{margin-bottom:26px;}
+.fld-r{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+.fld-l{font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.fld-v{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--gold);font-style:italic;}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:1px;background:var(--border);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);border:2px solid var(--black);box-shadow:0 0 0 1px var(--gold);}
+.c-out{background:var(--panel);padding:48px;border:1px solid var(--border);border-left:none;display:flex;flex-direction:column;justify-content:space-between;}
+.out-l{font-size:.54rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
+.out-v{font-family:'Playfair Display',serif;font-size:3.6rem;font-weight:400;color:var(--gold);line-height:1;margin-bottom:4px;}
+.out-s{font-size:.68rem;color:var(--muted);margin-bottom:36px;}
+.rows{display:flex;flex-direction:column;}
+.row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);}
+.row:first-child{border-top:1px solid var(--border);}
+.rl{font-size:.66rem;color:var(--muted);}
+.rv{font-family:'DM Mono',monospace;font-size:.78rem;}
+.rv.up{color:var(--green);}
+.rv.dn{color:var(--red);}
+.bar{height:2px;background:var(--border);margin-top:4px;overflow:hidden;border-radius:1px;}
+.bar-f{height:100%;transition:width .8s ease;}
+.bar-f.g{background:linear-gradient(90deg,var(--gold),var(--green));}
+.bar-f.d{background:rgba(122,117,112,.35);}
+.c-note{font-size:.58rem;color:rgba(122,117,112,.38);margin-top:16px;font-style:italic;}
+
+/* ════════════════════════
+   CONTACT  +  Formspree
+════════════════════════ */
+#contact{background:var(--dark);}
+.con-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:52px;}
+.con-info{display:flex;flex-direction:column;gap:0;}
+.ci{display:flex;gap:18px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--border);}
+.ci:first-child{border-top:1px solid var(--border);}
+.ci-bar{width:1px;height:30px;background:var(--gold);opacity:.3;flex-shrink:0;margin-top:2px;}
+.ci h6{font-size:.54rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.ci p,.ci a{font-size:.86rem;font-weight:300;color:var(--white);text-decoration:none;transition:color .3s;}
+.ci a:hover{color:var(--gold);}
+.wa-btn{display:inline-flex;align-items:center;gap:10px;margin-top:32px;background:rgba(76,175,135,.1);border:1px solid rgba(76,175,135,.25);padding:14px 24px;color:var(--green);font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all .3s;}
+.wa-btn:hover{background:rgba(76,175,135,.18);}
+.con-form{display:flex;flex-direction:column;}
+.ff{padding:15px 0;border-bottom:1px solid var(--border);}
+.ff label{font-size:.54rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.ff input,.ff select,.ff textarea{background:transparent;border:none;color:var(--white);padding:0;font-family:'Jost',sans-serif;font-size:.84rem;font-weight:300;outline:none;width:100%;}
+.ff input::placeholder,.ff textarea::placeholder{color:rgba(122,117,112,.35);}
+.ff select{cursor:pointer;}
+.ff select option{background:var(--panel);}
+.ff textarea{resize:none;min-height:60px;}
+.ff-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.sub-btn{margin-top:28px;background:transparent;color:var(--gold);border:1px solid rgba(184,150,90,.35);padding:14px 36px;font-family:'Jost',sans-serif;font-size:.64rem;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;align-self:flex-start;}
+.sub-btn:hover{background:var(--gold);color:var(--black);}
+#f-ok{display:none;margin-top:20px;padding:16px 20px;background:rgba(76,175,135,.08);border:1px solid rgba(76,175,135,.22);font-size:.78rem;color:var(--green);line-height:1.6;}
+.fp-note{margin-top:24px;padding:14px 18px;background:rgba(184,150,90,.05);border:1px solid rgba(184,150,90,.15);font-size:.68rem;color:var(--muted);line-height:1.65;}
+.fp-note strong{color:var(--gold);font-weight:500;}
+
+/* ════════════════════════
+   FOOTER
+════════════════════════ */
+footer{background:var(--black);border-top:1px solid var(--border);padding:44px 64px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:28px;}
+.f-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:400;margin-bottom:8px;}
+.f-reg{font-size:.58rem;color:var(--muted);line-height:1.75;max-width:380px;}
+.f-r{display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+.f-soc{display:flex;gap:8px;}
+.sb{width:30px;height:30px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.6rem;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .3s;}
+.sb:hover{border-color:var(--gold);color:var(--gold);}
+.f-copy{font-size:.58rem;color:var(--muted);}
+
+/* ════════════════════════
+   TOAST
+════════════════════════ */
+.toast{position:fixed;bottom:28px;right:28px;z-index:999;background:var(--panel);border:1px solid var(--gold);border-left:3px solid var(--gold);padding:14px 22px;max-width:290px;transform:translateY(110%);opacity:0;transition:all .4s ease;}
+.toast.on{transform:translateY(0);opacity:1;}
+.t-t{font-size:.62rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;}
+.t-m{font-size:.74rem;color:var(--muted);}
+
+/* ════════════════════════
+   REVEAL
+════════════════════════ */
+.rev{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.rev.in{opacity:1;transform:translateY(0);}
+
+/* ════════════════════════
+   KEYFRAMES
+════════════════════════ */
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
+@keyframes fu{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════════════════════
+   RESPONSIVE
+════════════════════════ */
+@media(max-width:1060px){
+  .f-wrap{grid-template-columns:1fr;}
+  .f-left{border-right:none;border-bottom:1px solid var(--border);}
+  .svc-g,.svc-g2{grid-template-columns:1fr 1fr;}
+  .con-g{grid-template-columns:1fr;gap:44px;}
+  .stats-g{grid-template-columns:1fr 1fr;gap:32px;}
+  .st{text-align:left;padding:0;border-right:none;}
+}
+@media(max-width:768px){
+  nav{padding:16px 20px;}nav.scrolled{padding:12px 20px;}
+  .nav-r{display:none;}.hbg{display:flex;}
+  .sp{padding:64px 20px;}
+  .stats{padding:40px 20px;}
+  .svc-g,.svc-g2{grid-template-columns:1fr;}
+  .si{border-right:none;border-bottom:1px solid var(--border);}
+  .cw.on{grid-template-columns:1fr;}
+  .c-out{border-left:1px solid var(--border);border-top:none;}
+  .c-in,.c-out{padding:32px 20px;}
+  .ff-2{grid-template-columns:1fr;}
+  footer{padding:32px 20px;flex-direction:column;align-items:flex-start;}
+  .f-r{align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- MOBILE NAV -->
+<div class="mob" id="mob">
+  <button class="mob-x" onclick="document.getElementById('mob').classList.remove('open')">✕</button>
+  <a href="#founder" onclick="this.closest('.mob').classList.remove('open')">About</a>
+  <a href="#services" onclick="this.closest('.mob').classList.remove('open')">Services</a>
+  <a href="#tools" onclick="this.closest('.mob').classList.remove('open')">Calculators</a>
+  <a href="#contact" onclick="this.closest('.mob').classList.remove('open')">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo" href="#">
+    <div><div>Arthaniti Global Capital</div><span class="logo-sub">Research · Strategy · Wealth</span></div>
+  </a>
+  <div class="nav-r">
+    <a href="#founder">About</a>
+    <a href="#services">Services</a>
+    <a href="#tools">Calculators</a>
+    <a href="#contact">Contact</a>
+    <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Connect</button>
+  </div>
+  <button class="hbg" onclick="document.getElementById('mob').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ════════════ HERO ════════════ -->
+<section class="hero">
+  <canvas id="cv"></canvas>
+  <div class="h-ov"></div>
+  <div class="h-con">
+    <div class="h-eye">SEBI Registered · ARN 258773 · Mumbai, India</div>
+    <h1>Wealth Needs A<br><em>Smarter</em> Perspective</h1>
+    <p class="h-sub">Research · Mutual Funds · ETF Strategy · Unlisted Shares · Insurance</p>
+    <div class="h-btns">
+      <a href="#founder" class="btn-w">Meet The Founder</a>
+      <a href="#tools" class="btn-o">Free Calculators</a>
+    </div>
+  </div>
+  <div class="h-scroll"><div class="sc-ln"></div><span>Scroll</span></div>
+</section>
+
+<!-- ════════════ TICKER (moves ✅ · simulated data) ════════════ -->
+<div class="ticker">
+  <div class="t-track" id="ttrack">
+    <span class="ti"><span class="tn">NIFTY 50</span><span class="tv">22,487</span><span class="tu">▲ +1.24%</span></span>
+    <span class="ti"><span class="tn">SENSEX</span><span class="tv">74,340</span><span class="tu">▲ +0.98%</span></span>
+    <span class="ti"><span class="tn">BANK NIFTY</span><span class="tv">48,210</span><span class="td">▼ −0.34%</span></span>
+    <span class="ti"><span class="tn">NIFTY IT</span><span class="tv">38,650</span><span class="tu">▲ +2.10%</span></span>
+    <span class="ti"><span class="tn">NIFTY MIDCAP</span><span class="tv">49,120</span><span class="tu">▲ +1.50%</span></span>
+    <span class="ti"><span class="tn">GOLD/10g</span><span class="tv">₹62,480</span><span class="tu">▲ +0.60%</span></span>
+    <span class="ti"><span class="tn">USD/INR</span><span class="tv">83.24</span><span class="td">▼ −0.12%</span></span>
+    <span class="ti"><span class="tn">CRUDE OIL</span><span class="tv">$78.40</span><span class="td">▼ −0.82%</span></span>
+    <span class="ti"><span class="tn">NIFTY PHARMA</span><span class="tv">18,920</span><span class="tu">▲ +1.85%</span></span>
+    <span class="ti"><span class="tn">NIFTY AUTO</span><span class="tv">21,340</span><span class="tu">▲ +0.75%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ti"><span class="tn">NIFTY 50</span><span class="tv">22,487</span><span class="tu">▲ +1.24%</span></span>
+    <span class="ti"><span class="tn">SENSEX</span><span class="tv">74,340</span><span class="tu">▲ +0.98%</span></span>
+    <span class="ti"><span class="tn">BANK NIFTY</span><span class="tv">48,210</span><span class="td">▼ −0.34%</span></span>
+    <span class="ti"><span class="tn">NIFTY IT</span><span class="tv">38,650</span><span class="tu">▲ +2.10%</span></span>
+    <span class="ti"><span class="tn">NIFTY MIDCAP</span><span class="tv">49,120</span><span class="tu">▲ +1.50%</span></span>
+    <span class="ti"><span class="tn">GOLD/10g</span><span class="tv">₹62,480</span><span class="tu">▲ +0.60%</span></span>
+    <span class="ti"><span class="tn">USD/INR</span><span class="tv">83.24</span><span class="td">▼ −0.12%</span></span>
+    <span class="ti"><span class="tn">CRUDE OIL</span><span class="tv">$78.40</span><span class="td">▼ −0.82%</span></span>
+    <span class="ti"><span class="tn">NIFTY PHARMA</span><span class="tv">18,920</span><span class="tu">▲ +1.85%</span></span>
+    <span class="ti"><span class="tn">NIFTY AUTO</span><span class="tv">21,340</span><span class="tu">▲ +0.75%</span></span>
+  </div>
+</div>
+
+<!-- ════════════ STATS ════════════ -->
+<div class="stats rev">
+  <div class="stats-g">
+    <div class="st">
+      <div class="st-n">300<span style="font-size:2rem;color:var(--gold2)">+</span></div>
+      <div class="st-l">Clients Served</div>
+    </div>
+    <div class="st">
+      <div class="st-n">7<span style="font-size:2rem;color:var(--gold2)">+</span></div>
+      <div class="st-l">Years Experience</div>
+    </div>
+    <div class="st">
+      <div class="st-n">500<span style="font-size:2rem;color:var(--gold2)">+</span></div>
+      <div class="st-l">Stocks Scanned Daily</div>
+    </div>
+    <div class="st">
+      <div class="st-n" style="font-size:2.2rem">Daily</div>
+      <div class="st-l">Market Outlook Published</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FOUNDER ════════════ -->
+<section id="founder" class="sp">
+  <div class="f-wrap rev">
+    <div class="f-left">
+      <div class="f-photo">
+        <div class="f-photo-icon">A</div>
+        <div class="f-photo-hint">Add your photo</div>
+      </div>
+      <div class="f-badges">
+        <div class="badge">SEBI Research Analyst</div>
+        <div class="badge">MF Distributor · ARN 258773</div>
+        <div class="badge">300+ Clients Across India</div>
+        <div class="badge">7+ Years in Markets</div>
+      </div>
+    </div>
+    <div class="f-right">
+      <div class="lbl">Founder's Word</div>
+      <div class="f-name">Arthaniti Global Capital</div>
+      <div class="f-title">Founder & Research Analyst · Mumbai</div>
+      <div class="f-quote">"Every Indian investor deserves institutional-quality research — not just product-pushing."</div>
+      <p class="f-body">
+        Over 7+ years, I have guided <strong>300+ clients</strong> across India through bull markets, corrections, and everything in between.<br><br>
+        My approach is simple — <em>data over emotion, discipline over impulse, long-term vision over short-term noise.</em> Whether it's our automated stock screener, ETF strategy, or curated mutual fund portfolios — everything is built on rigorous research and genuine care for your financial future.<br><br>
+        At Arthaniti Global Capital, you are not a client number. You are a partner in building lasting, generational wealth.
+      </p>
+      <div class="f-sign">Arthaniti Global Capital
+        <span>SEBI Reg. Research Analyst · ARN: 258773 · Mumbai</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ SERVICES ════════════ -->
+<section id="services" class="sp" style="background:var(--dark);">
+  <div class="svc-hd rev">
+    <div class="lbl" style="justify-content:center">What We Do</div>
+    <h2 class="sh">Six Ways We Grow<br><em>Your Wealth</em></h2>
+  </div>
+  <div class="svc-g rev">
+    <div class="si"><span class="si-n">01</span><h3>Equity Research</h3><p>Institutional-grade fundamental & technical analysis delivered to your inbox before market opens every morning.</p><a href="#contact">Enquire</a></div>
+    <div class="si"><span class="si-n">02</span><h3>Mutual Funds</h3><p>Curated MF portfolios built around your risk profile and life goals. 300+ clients managed with data and discipline.</p><a href="#contact">Enquire</a></div>
+    <div class="si"><span class="si-n">03</span><h3>ETF Strategy</h3><p>Rules-based, emotion-free ETF portfolios rebalanced monthly. Momentum-driven sector allocation with capital preservation mode.</p><a href="#contact">Know More</a></div>
+  </div>
+  <div class="svc-g2 rev">
+    <div class="si"><span class="si-n">04</span><h3>Unlisted Shares</h3><p>Exclusive pre-IPO and unlisted share access in high-growth companies — opportunities typically reserved for institutions.</p><a href="#contact">Get Access</a></div>
+    <div class="si"><span class="si-n">05</span><h3>Insurance Planning</h3><p>Life, health, and term insurance tailored to your needs. Because protecting wealth matters as much as growing it.</p><a href="#contact">Enquire</a></div>
+    <div class="si"><span class="si-n">06</span><h3>Auto Research Sheet</h3><p>Our Google Sheet scans 500+ NSE/BSE stocks daily across 12+ parameters and sends WhatsApp alerts every morning.</p><a href="#contact">Get Access</a></div>
+  </div>
+</section>
+
+<!-- ════════════ CALCULATORS ════════════ -->
+<section id="tools" class="sp">
+  <div class="calc-top rev">
+    <div>
+      <div class="lbl">Free Tools</div>
+      <h2 class="sh">Plan Your<br><em>Financial Future</em></h2>
+    </div>
+    <div class="tabs">
+      <button class="tab on" onclick="sw('sip',this)">SIP</button>
+      <button class="tab" onclick="sw('lump',this)">Lumpsum</button>
+      <button class="tab" onclick="sw('goal',this)">Goal Planner</button>
+      <button class="tab" onclick="sw('emi',this)">EMI</button>
+    </div>
+  </div>
+
+  <!-- SIP -->
+  <div class="cw on" id="cw-sip">
+    <div class="c-in">
+      <h3>SIP Calculator</h3>
+      <p>See how a small monthly investment compounds into serious wealth over time.</p>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Monthly Investment</span><span class="fld-v" id="s1v">₹5,000</span></div><input type="range" id="s1r" min="500" max="100000" step="500" value="5000" oninput="cSIP()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Expected Return (p.a.)</span><span class="fld-v" id="s2v">12%</span></div><input type="range" id="s2r" min="1" max="30" step=".5" value="12" oninput="cSIP()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Time Period</span><span class="fld-v" id="s3v">10 Yrs</span></div><input type="range" id="s3r" min="1" max="40" value="10" oninput="cSIP()"></div>
+      <p class="c-note">* Indicative only. Investments subject to market risk.</p>
+    </div>
+    <div class="c-out">
+      <div><div class="out-l">Total Corpus</div><div class="out-v" id="so1">₹11.6 L</div><div class="out-s" id="so2">After 10 years at 12% p.a.</div></div>
+      <div class="rows">
+        <div class="row"><span class="rl">Amount Invested</span><span class="rv" id="so3">₹6.0 L</span></div>
+        <div class="bar"><div class="bar-f d" id="sb1" style="width:52%"></div></div>
+        <div class="row"><span class="rl">Wealth Gained</span><span class="rv up" id="so4">₹5.6 L</span></div>
+        <div class="bar"><div class="bar-f g" id="sb2" style="width:48%"></div></div>
+        <div class="row"><span class="rl">Return on Investment</span><span class="rv up" id="so5">+93.4%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LUMPSUM -->
+  <div class="cw" id="cw-lump">
+    <div class="c-in">
+      <h3>Lumpsum Calculator</h3>
+      <p>Calculate the future value of a one-time investment with compound growth.</p>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Investment Amount</span><span class="fld-v" id="l1v">₹1,00,000</span></div><input type="range" id="l1r" min="10000" max="5000000" step="10000" value="100000" oninput="cLump()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Expected Return (p.a.)</span><span class="fld-v" id="l2v">12%</span></div><input type="range" id="l2r" min="1" max="30" step=".5" value="12" oninput="cLump()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Time Period</span><span class="fld-v" id="l3v">10 Yrs</span></div><input type="range" id="l3r" min="1" max="40" value="10" oninput="cLump()"></div>
+      <p class="c-note">* Past performance is not a guarantee of future results.</p>
+    </div>
+    <div class="c-out">
+      <div><div class="out-l">Future Value</div><div class="out-v" id="lo1">₹3.1 L</div><div class="out-s" id="lo2">After 10 years at 12% p.a.</div></div>
+      <div class="rows">
+        <div class="row"><span class="rl">Amount Invested</span><span class="rv" id="lo3">₹1.0 L</span></div>
+        <div class="bar"><div class="bar-f d" id="lb1" style="width:32%"></div></div>
+        <div class="row"><span class="rl">Wealth Gained</span><span class="rv up" id="lo4">₹2.1 L</span></div>
+        <div class="bar"><div class="bar-f g" id="lb2" style="width:68%"></div></div>
+        <div class="row"><span class="rl">Absolute Return</span><span class="rv up" id="lo5">+210.8%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOAL -->
+  <div class="cw" id="cw-goal">
+    <div class="c-in">
+      <h3>Goal Planner</h3>
+      <p>Know the exact monthly SIP needed to reach your target — retirement, home, or any dream.</p>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Target Corpus</span><span class="fld-v" id="g1v">₹50 L</span></div><input type="range" id="g1r" min="100000" max="10000000" step="100000" value="5000000" oninput="cGoal()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Expected Return (p.a.)</span><span class="fld-v" id="g2v">12%</span></div><input type="range" id="g2r" min="6" max="24" step=".5" value="12" oninput="cGoal()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Time Horizon</span><span class="fld-v" id="g3v">20 Yrs</span></div><input type="range" id="g3r" min="1" max="40" value="20" oninput="cGoal()"></div>
+      <p class="c-note">* Based on constant SIP at fixed return. Actual results vary.</p>
+    </div>
+    <div class="c-out">
+      <div><div class="out-l">Monthly SIP Required</div><div class="out-v" id="go1">₹5,505</div><div class="out-s" id="go2">To reach ₹50 L in 20 years</div></div>
+      <div class="rows">
+        <div class="row"><span class="rl">Total You Invest</span><span class="rv" id="go3">₹13.2 L</span></div>
+        <div class="bar"><div class="bar-f d" id="gb1" style="width:26%"></div></div>
+        <div class="row"><span class="rl">Wealth Your Money Earns</span><span class="rv up" id="go4">₹36.8 L</span></div>
+        <div class="bar"><div class="bar-f g" id="gb2" style="width:74%"></div></div>
+        <div class="row"><span class="rl">Wealth Multiplier</span><span class="rv up" id="go5">3.8×</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMI -->
+  <div class="cw" id="cw-emi">
+    <div class="c-in">
+      <h3>EMI Calculator</h3>
+      <p>Understand the full cost of your home, car, or personal loan before you commit.</p>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Loan Amount</span><span class="fld-v" id="e1v">₹30 L</span></div><input type="range" id="e1r" min="100000" max="20000000" step="100000" value="3000000" oninput="cEMI()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Interest Rate (p.a.)</span><span class="fld-v" id="e2v">8.5%</span></div><input type="range" id="e2r" min="5" max="24" step=".1" value="8.5" oninput="cEMI()"></div>
+      <div class="fld"><div class="fld-r"><span class="fld-l">Loan Tenure</span><span class="fld-v" id="e3v">20 Yrs</span></div><input type="range" id="e3r" min="1" max="30" value="20" oninput="cEMI()"></div>
+      <p class="c-note">* Indicative only. Actual EMI may differ by lender.</p>
+    </div>
+    <div class="c-out">
+      <div><div class="out-l">Monthly EMI</div><div class="out-v" id="eo1">₹26,035</div><div class="out-s" id="eo2">₹30L at 8.5% for 20 years</div></div>
+      <div class="rows">
+        <div class="row"><span class="rl">Principal Amount</span><span class="rv" id="eo3">₹30.0 L</span></div>
+        <div class="bar"><div class="bar-f d" id="eb1" style="width:49%"></div></div>
+        <div class="row"><span class="rl">Total Interest Payable</span><span class="rv dn" id="eo4">₹32.5 L</span></div>
+        <div class="bar"><div class="bar-f" id="eb2" style="width:51%;background:rgba(192,80,77,.5)"></div></div>
+        <div class="row"><span class="rl">Total Repayment</span><span class="rv" id="eo5">₹62.5 L</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ CONTACT ════════════ -->
+<section id="contact" class="sp" style="background:var(--dark);">
+  <div class="lbl rev">Get In Touch</div>
+  <h2 class="sh rev">Let's Build Your<br><em>Financial Future</em></h2>
+  <div class="con-g">
+    <!-- INFO -->
+    <div class="rev">
+      <div class="con-info">
+        <div class="ci"><div class="ci-bar"></div><div><h6>Location</h6><p>Mumbai, Maharashtra, India</p></div></div>
+        <div class="ci"><div class="ci-bar"></div><div><h6>WhatsApp Only</h6><a href="https://wa.me/917738216956">+91 77382 16956</a></div></div>
+        <div class="ci"><div class="ci-bar"></div><div><h6>Email</h6><a href="mailto:arthanitiglobal@gmail.com">arthanitiglobal@gmail.com</a></div></div>
+        <div class="ci"><div class="ci-bar"></div><div><h6>Hours</h6><p>Mon – Fri &nbsp;|&nbsp; 9 AM – 6 PM IST</p></div></div>
+      </div>
+      <a href="https://wa.me/917738216956" class="wa-btn">
+        <span>💬</span> Chat on WhatsApp
+      </a>
+      <!-- Formspree activation note -->
+      <div class="fp-note">
+        <strong>📬 Activate Email Delivery (2 min):</strong><br>
+        1. Sign up free at <strong>formspree.io</strong> with your Gmail<br>
+        2. Create a form → copy the <strong>Form ID</strong><br>
+        3. Replace <code>YOUR_FORM_ID</code> in this file<br>
+        4. All enquiries → arthanitiglobal@gmail.com ✅
+      </div>
+    </div>
+
+    <!-- FORM — Formspree ready -->
+    <div class="rev">
+      <form class="con-form" id="cform"
+            action="https://formspree.io/f/YOUR_FORM_ID"
+            method="POST"
+            onsubmit="doContact(event)">
+        <div class="ff-2">
+          <div class="ff"><label>Full Name</label><input type="text" name="name" placeholder="Your name" required></div>
+          <div class="ff"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required></div>
+        </div>
+        <div class="ff"><label>WhatsApp Number</label><input type="tel" name="phone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="ff">
+          <label>I'm Interested In</label>
+          <select name="service">
+            <option value="">Select a service...</option>
+            <option>Mutual Fund Investment</option>
+            <option>ETF Strategy Portfolio</option>
+            <option>Auto Research Sheet</option>
+            <option>Unlisted / Pre-IPO Shares</option>
+            <option>Insurance Planning</option>
+            <option>General Financial Advisory</option>
+          </select>
+        </div>
+        <div class="ff"><label>Message</label><textarea name="message" placeholder="Tell us your financial goals..." rows="3"></textarea></div>
+        <input type="text" name="_gotcha" style="display:none">
+        <input type="hidden" name="_subject" value="New Enquiry — Arthaniti Global Capital">
+        <button type="submit" class="sub-btn">Send Enquiry →</button>
+      </form>
+      <div id="f-ok">✅ <strong>Thank you!</strong> Enquiry received. We'll reach out within 24 hours on WhatsApp or Email.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <div>
+    <div class="f-logo">Arthaniti Global Capital</div>
+    <p class="f-reg">SEBI Registered Research Analyst · Mutual Fund Distributor · ARN: 258773 · Mumbai, India<br>All investments subject to market risk. Please read all scheme documents carefully. Past performance is not indicative of future returns.</p>
+  </div>
+  <div class="f-r">
+    <div class="f-soc">
+      <a href="#" class="sb">in</a>
+      <a href="#" class="sb">𝕏</a>
+      <a href="https://wa.me/917738216956" class="sb">W</a>
+      <a href="mailto:arthanitiglobal@gmail.com" class="sb">✉</a>
+    </div>
+    <div class="f-copy">© 2025 Arthaniti Global Capital. All rights reserved.</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><div class="t-t">Done</div><div class="t-m" id="tm"></div></div>
+
+<script>
+/* ── CURSOR ── */
+const C=document.getElementById('cur'),CR=document.getElementById('cur-ring');
+document.addEventListener('mousemove',e=>{
+  C.style.left=e.clientX+'px';C.style.top=e.clientY+'px';
+  setTimeout(()=>{CR.style.left=e.clientX+'px';CR.style.top=e.clientY+'px';},90);
+});
+document.querySelectorAll('a,button,input[type=range]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{CR.style.transform='translate(-50%,-50%) scale(1.8)';CR.style.opacity='.3';});
+  el.addEventListener('mouseleave',()=>{CR.style.transform='translate(-50%,-50%) scale(1)';CR.style.opacity='1';});
+});
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>50));
+
+/* ══════════════════════════════════════
+   HERO — LIVE CANDLESTICK CHART
+══════════════════════════════════════ */
+(function(){
+  const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+  let W,H,bars=[],N=70,p=22400,tick=0;
+
+  function rp(base,v){return base+(Math.random()-.48)*v;}
+
+  function init(){
+    W=cv.width=innerWidth; H=cv.height=innerHeight;
+    bars=[];p=22400;
+    for(let i=0;i<N;i++){
+      const o=p,c=rp(p,110),h=Math.max(o,c)+Math.random()*50,l=Math.min(o,c)-Math.random()*50;
+      bars.push({o,c,h,l});p=c;
+    }
+  }
+
+  function addBar(){
+    const o=bars[bars.length-1].c,c=rp(o,70),h=Math.max(o,c)+Math.random()*35,l=Math.min(o,c)-Math.random()*35;
+    bars.push({o,c,h,l});
+    if(bars.length>N)bars.shift();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    if(!bars.length)return;
+    const prices=bars.flatMap(b=>[b.h,b.l]);
+    const mn=Math.min(...prices),mx=Math.max(...prices),rng=mx-mn||1;
+    const cx=W*.06,cw=W*.88,cy=H*.15,ch=H*.68;
+    const bw=Math.max(2,cw/N-1.2),gap=cw/N;
+    const ty=p=>cy+ch-((p-mn)/rng*ch);
+    const tx=i=>cx+i*gap+gap/2;
+
+    // grid
+    for(let i=0;i<=4;i++){
+      const y=cy+(ch/4)*i;
+      ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx+cw,y);
+      ctx.strokeStyle='rgba(184,150,90,0.05)';ctx.lineWidth=.5;ctx.stroke();
+      ctx.fillStyle='rgba(122,117,112,0.45)';
+      ctx.font=`${Math.max(9,W*.0075)}px DM Mono,monospace`;
+      ctx.textAlign='right';
+      ctx.fillText(Math.round(mx-(rng/4)*i).toLocaleString('en-IN'),cx-6,y+4);
+    }
+
+    // candles
+    bars.forEach((b,i)=>{
+      const x=tx(i),oy=ty(b.o),cy2=ty(b.c),hy=ty(b.h),ly=ty(b.l);
+      const bull=b.c>=b.o,a=.45+.55*(i/bars.length);
+      const col=bull?`rgba(76,175,135,${a})`:`rgba(192,80,77,${a})`;
+      ctx.beginPath();ctx.moveTo(x,hy);ctx.lineTo(x,ly);
+      ctx.strokeStyle=col;ctx.lineWidth=.8;ctx.stroke();
+      const bt=Math.min(oy,cy2),bh=Math.max(1,Math.abs(cy2-oy));
+      ctx.fillStyle=col;ctx.fillRect(x-bw/2,bt,bw,bh);
+    });
+
+    // price line
+    if(bars.length>1){
+      ctx.beginPath();ctx.moveTo(tx(0),ty(bars[0].c));
+      for(let i=1;i<bars.length;i++){
+        const x1=tx(i-1),y1=ty(bars[i-1].c),x2=tx(i),y2=ty(bars[i].c);
+        ctx.quadraticCurveTo(x1,y1,(x1+x2)/2,(y1+y2)/2);
+      }
+      ctx.strokeStyle='rgba(184,150,90,0.55)';ctx.lineWidth=1.5;
+      ctx.shadowColor='rgba(184,150,90,0.25)';ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;
+
+      // gradient fill
+      const gr=ctx.createLinearGradient(0,cy,0,cy+ch);
+      gr.addColorStop(0,'rgba(184,150,90,0.07)');gr.addColorStop(1,'rgba(184,150,90,0)');
+      ctx.beginPath();ctx.moveTo(tx(0),ty(bars[0].c));
+      for(let i=1;i<bars.length;i++){
+        const x1=tx(i-1),y1=ty(bars[i-1].c),x2=tx(i),y2=ty(bars[i].c);
+        ctx.quadraticCurveTo(x1,y1,(x1+x2)/2,(y1+y2)/2);
+      }
+      ctx.lineTo(tx(bars.length-1),cy+ch);ctx.lineTo(tx(0),cy+ch);
+      ctx.closePath();ctx.fillStyle=gr;ctx.fill();
+    }
+
+    // live price tag
+    const lb=bars[bars.length-1],ly2=ty(lb.c),bull=lb.c>=lb.o;
+    const pcol=bull?'rgba(76,175,135,1)':'rgba(192,80,77,1)';
+    ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(tx(bars.length-1),ly2);ctx.lineTo(cx+cw+30,ly2);
+    ctx.strokeStyle=pcol;ctx.lineWidth=.7;ctx.stroke();ctx.setLineDash([]);
+    const ptxt=Math.round(lb.c).toLocaleString('en-IN');
+    const fsz=Math.max(10,W*.009);
+    ctx.font=`500 ${fsz}px DM Mono,monospace`;
+    const tw=ctx.measureText(ptxt).width;
+    ctx.fillStyle=bull?'rgba(76,175,135,0.15)':'rgba(192,80,77,0.15)';
+    ctx.fillRect(cx+cw+8,ly2-10,tw+14,18);
+    ctx.fillStyle=pcol;ctx.textAlign='left';ctx.fillText(ptxt,cx+cw+15,ly2+3);
+
+    tick++;if(tick%7===0)addBar();
+    requestAnimationFrame(draw);
+  }
+
+  init();draw();window.addEventListener('resize',init);
+})();
+
+/* ── CALC TABS ── */
+function sw(id,btn){
+  document.querySelectorAll('.cw').forEach(w=>w.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('cw-'+id).classList.add('on');btn.classList.add('on');
+}
+
+/* ── FORMAT ── */
+function f(n){
+  if(n>=10000000)return'₹'+(n/10000000).toFixed(2)+' Cr';
+  if(n>=100000)return'₹'+(n/100000).toFixed(1)+' L';
+  if(n>=1000)return'₹'+(n/1000).toFixed(1)+' K';
+  return'₹'+Math.round(n).toLocaleString('en-IN');
+}
+
+/* ── SIP ── */
+function cSIP(){
+  const a=+s1r.value,r=+s2r.value,y=+s3r.value;
+  s1v.textContent='₹'+a.toLocaleString('en-IN');s2v.textContent=r+'%';s3v.textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,corpus=a*((Math.pow(1+mr,n)-1)/mr)*(1+mr),inv=a*n,gain=corpus-inv;
+  so1.textContent=f(corpus);so2.textContent='After '+y+' years at '+r+'% p.a.';
+  so3.textContent=f(inv);so4.textContent=f(gain);so5.textContent='+'+(gain/inv*100).toFixed(1)+'%';
+  sb1.style.width=(inv/corpus*100).toFixed(1)+'%';sb2.style.width=(gain/corpus*100).toFixed(1)+'%';
+}
+
+/* ── LUMP ── */
+function cLump(){
+  const a=+l1r.value,r=+l2r.value,y=+l3r.value;
+  l1v.textContent='₹'+a.toLocaleString('en-IN');l2v.textContent=r+'%';l3v.textContent=y+' Yrs';
+  const fv=a*Math.pow(1+r/100,y),gain=fv-a;
+  lo1.textContent=f(fv);lo2.textContent='After '+y+' years at '+r+'% p.a.';
+  lo3.textContent=f(a);lo4.textContent=f(gain);lo5.textContent='+'+(gain/a*100).toFixed(1)+'%';
+  lb1.style.width=(a/fv*100).toFixed(1)+'%';lb2.style.width=(gain/fv*100).toFixed(1)+'%';
+}
+
+/* ── GOAL ── */
+function cGoal(){
+  const t=+g1r.value,r=+g2r.value,y=+g3r.value;
+  g1v.textContent=f(t);g2v.textContent=r+'%';g3v.textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,sip=t*mr/((Math.pow(1+mr,n)-1)*(1+mr)),inv=sip*n,gain=t-inv;
+  go1.textContent='₹'+Math.round(sip).toLocaleString('en-IN');go2.textContent='To reach '+f(t)+' in '+y+' years';
+  go3.textContent=f(inv);go4.textContent=f(gain);go5.textContent=(t/inv).toFixed(1)+'×';
+  gb1.style.width=(inv/t*100).toFixed(0)+'%';gb2.style.width=(gain/t*100).toFixed(0)+'%';
+}
+
+/* ── EMI ── */
+function cEMI(){
+  const p=+e1r.value,r=+e2r.value,y=+e3r.value;
+  e1v.textContent=f(p);e2v.textContent=r+'%';e3v.textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,emi=p*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1),tot=emi*n,int=tot-p;
+  eo1.textContent='₹'+Math.round(emi).toLocaleString('en-IN');eo2.textContent=f(p)+' at '+r+'% for '+y+' years';
+  eo3.textContent=f(p);eo4.textContent=f(int);eo5.textContent=f(tot);
+  eb1.style.width=(p/tot*100).toFixed(1)+'%';eb2.style.width=(int/tot*100).toFixed(1)+'%';
+}
+
+// Init all
+[cSIP,cLump,cGoal,cEMI].forEach(fn=>fn());
+
+/* ── SCROLL REVEAL ── */
+const ro=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');}),{threshold:.07});
+document.querySelectorAll('.rev').forEach(el=>ro.observe(el));
+
+/* ── TOAST ── */
+function toast(msg){document.getElementById('tm').textContent=msg;const t=document.getElementById('toast');t.classList.add('on');setTimeout(()=>t.classList.remove('on'),5000);}
+
+/* ── CONTACT FORM ── */
+function doContact(e){
+  e.preventDefault();
+  const form=document.getElementById('cform');
+  if(form.action.includes('YOUR_FORM_ID')){
+    document.getElementById('f-ok').style.display='block';
+    form.style.display='none';
+    toast('Enquiry received! Add Formspree ID to get it in Gmail.');
+    return;
+  }
+  fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}})
+    .then(r=>{
+      if(r.ok){document.getElementById('f-ok').style.display='block';form.style.display='none';toast('Enquiry sent to arthanitiglobal@gmail.com ✅');}
+      else toast('Something went wrong. Please WhatsApp us directly.');
+    }).catch(()=>toast('Please WhatsApp: +91 77382 16956'));
+}
+</script>
+</body>
+</html>
