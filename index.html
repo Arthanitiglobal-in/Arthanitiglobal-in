@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wealth Needs A Smarter Perspective — [Your Name] Advisory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --black:#080808;--dark:#0d0d0d;--panel:#111111;--border:rgba(255,255,255,0.07);
+  --gold:#b8965a;--gold2:#d4af72;--white:#f5f2ee;--muted:#7a7570;
+  --green:#4caf87;--red:#c0504d;
+}
+body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cur{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(184,150,90,0.35);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .18s ease;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:28px 64px;transition:all .4s;}
+nav.scrolled{padding:16px 64px;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:500;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.nav-links{display:flex;list-style:none;gap:36px;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;transition:color .3s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(184,150,90,.35);padding:11px 26px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;}
+.nav-cta:hover{background:var(--gold);color:var(--black);}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;}
+.hamburger span{display:block;width:22px;height:1px;background:var(--white);}
+.mob-nav{display:none;position:fixed;inset:0;background:var(--dark);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.mob-nav.open{display:flex;}
+.mob-nav a{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);text-decoration:none;transition:color .3s;}
+.mob-nav a:hover{color:var(--gold);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+#heroCanvas{position:absolute;inset:0;}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(184,150,90,.05),transparent 70%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(184,150,90,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(184,150,90,.025) 1px,transparent 1px);background-size:80px 80px;}
+.hero-content{position:relative;z-index:1;max-width:860px;padding:0 32px;}
+.hero-eye{font-size:.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:inline-flex;align-items:center;gap:16px;opacity:0;animation:fadeIn 1s .3s ease forwards;}
+.hero-eye::before,.hero-eye::after{content:'';width:36px;height:1px;background:var(--gold);opacity:.5;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,7vw,6rem);font-weight:400;line-height:1.04;margin-bottom:24px;opacity:0;animation:fadeUp 1.2s .5s ease forwards;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:.8rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:52px;opacity:0;animation:fadeIn 1s .9s ease forwards;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+.btn-w{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--black);background:var(--white);border:1px solid var(--white);padding:15px 36px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-w:hover{background:transparent;color:var(--white);}
+.btn-o{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border);padding:15px 36px;cursor:pointer;font-family:'Jost',sans-serif;transition:all .3s;text-decoration:none;display:inline-block;}
+.btn-o:hover{border-color:var(--gold);color:var(--gold);}
+.hero-scroll{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);z-index:1;opacity:0;animation:fadeIn 1s 1.6s ease forwards;}
+.scroll-ln{width:1px;height:48px;background:linear-gradient(var(--gold),transparent);animation:spulse 2s infinite;}
+@keyframes spulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+/* TICKER */
+.ticker{background:var(--panel);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;overflow:hidden;position:relative;}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1;}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--panel),transparent);}
+.ticker::after{right:0;background:linear-gradient(-90deg,var(--panel),transparent);}
+.tick-track{display:flex;white-space:nowrap;animation:tickRun 28s linear infinite;}
+.ti{display:inline-flex;align-items:center;gap:10px;padding:0 36px;border-right:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.72rem;}
+.tn{color:var(--muted);letter-spacing:1px;}.tv{color:var(--white);}
+.tu{color:var(--green);}.td{color:var(--red);}
+@keyframes tickRun{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTION */
+.sp{padding:120px 64px;}.sp-sm{padding:80px 64px;}
+.s-lbl{font-size:.58rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:inline-flex;align-items:center;gap:14px;}
+.s-lbl::before{content:'';width:24px;height:1px;background:var(--gold);}
+.s-h{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.8rem);font-weight:400;line-height:1.08;margin-bottom:20px;}
+.s-h em{font-style:italic;color:var(--gold);}
+.s-p{font-size:.86rem;font-weight:300;color:var(--muted);line-height:1.85;max-width:520px;}
+
+/* SERVICES */
+#services{background:var(--dark);}
+.svc-intro{max-width:660px;margin:0 auto 72px;text-align:center;}
+.svc-intro .s-lbl{justify-content:center;}
+.svc-intro .s-p{margin:0 auto;}
+.svc-g{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);}
+.svc-g2{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-top:none;}
+.si{padding:56px 44px;border-right:1px solid var(--border);position:relative;overflow:hidden;transition:background .4s;}
+.si:last-child{border-right:none;}
+.si::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .5s;}
+.si:hover{background:rgba(184,150,90,.04);}
+.si:hover::before{transform:scaleX(1);}
+.si-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:2px;margin-bottom:28px;display:block;}
+.si h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:400;margin-bottom:14px;line-height:1.2;}
+.si p{font-size:.83rem;color:var(--muted);line-height:1.8;font-weight:300;}
+.si-lnk{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:gap .3s;}
+.si-lnk:hover{gap:18px;}
+.si-lnk::after{content:'→';}
+
+/* STRATEGY SPLIT */
+#strategy{background:var(--black);padding:0;}
+.split{display:grid;grid-template-columns:1fr 1fr;min-height:580px;}
+.sl{padding:100px 80px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border);}
+.sr{background:var(--panel);padding:72px;display:flex;flex-direction:column;justify-content:space-between;}
+.perf-hdr{font-size:.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;}
+.perf-big{font-family:'Playfair Display',serif;font-size:4.8rem;font-weight:400;color:var(--gold);line-height:1;}
+.perf-sub{font-size:.7rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;}
+.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:44px;}
+.ps .pv{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;color:var(--green);line-height:1;}
+.ps .pl{font-size:.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:5px;}
+.mini-chart{margin-top:36px;}
+.mini-bars{display:flex;align-items:flex-end;gap:6px;height:72px;}
+.bar-m{flex:1;border-radius:1px 1px 0 0;background:linear-gradient(180deg,var(--gold2),rgba(184,150,90,.2));transition:height 1s ease;}
+.bar-m.neg{background:linear-gradient(180deg,var(--red),rgba(192,80,77,.2));}
+.mini-lbl{font-size:.58rem;color:var(--muted);margin-top:7px;font-family:'DM Mono',monospace;display:flex;justify-content:space-between;}
+.strat-list{display:flex;flex-direction:column;gap:0;margin-top:36px;}
+.strat-row{display:flex;align-items:flex-start;gap:20px;padding:20px 0;border-bottom:1px solid var(--border);}
+.strat-row:first-child{border-top:1px solid var(--border);}
+.sn{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);min-width:18px;padding-top:2px;}
+.strat-row h4{font-size:.86rem;font-weight:400;margin-bottom:4px;}
+.strat-row p{font-size:.78rem;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* RESEARCH */
+#research{background:var(--dark);}
+.res-wrap{display:grid;grid-template-columns:1.15fr 1fr;gap:90px;align-items:center;}
+.sheet-box{border:1px solid var(--border);background:var(--panel);overflow:hidden;position:relative;}
+.sheet-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.sheet-top{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--border);background:rgba(184,150,90,.04);}
+.sheet-ttl{font-size:.62rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:.58rem;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;}
+.ld{width:5px;height:5px;border-radius:50%;background:var(--green);animation:ldp 1.8s infinite;}
+@keyframes ldp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(76,175,135,.4);}70%{opacity:.6;box-shadow:0 0 0 5px transparent;}}
+.sr-row{display:grid;grid-template-columns:2fr 1.1fr .75fr .75fr 1fr;padding:12px 22px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.7rem;transition:background .2s;}
+.sr-row:hover{background:rgba(184,150,90,.025);}
+.sr-row.hdr{font-size:.58rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:9px 22px;background:rgba(255,255,255,.015);}
+.sr-row>div:not(:first-child){text-align:right;}
+.sig-b{color:var(--green);font-size:.65rem;letter-spacing:1px;}
+.sig-w{color:var(--gold);font-size:.65rem;letter-spacing:1px;}
+.sig-a{color:var(--red);font-size:.65rem;letter-spacing:1px;}
+.sheet-foot{padding:11px 22px;font-size:.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.res-txt .s-p{margin-bottom:36px;}
+.res-buls{display:flex;flex-direction:column;gap:0;}
+.rb{display:flex;align-items:flex-start;gap:18px;padding:18px 0;border-bottom:1px solid var(--border);}
+.rb:first-child{border-top:1px solid var(--border);}
+.rb-ic{font-size:.95rem;min-width:18px;padding-top:1px;}
+.rb h5{font-size:.83rem;font-weight:400;margin-bottom:3px;}
+.rb p{font-size:.77rem;color:var(--muted);line-height:1.65;font-weight:300;}
+
+/* CALCULATORS */
+#tools{background:var(--black);}
+.tools-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:56px;}
+.tab-bar{display:flex;gap:0;border:1px solid var(--border);}
+.tab-btn{padding:12px 24px;background:transparent;border:none;border-right:1px solid var(--border);color:var(--muted);font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .25s;}
+.tab-btn:last-child{border-right:none;}
+.tab-btn.active{background:var(--gold);color:var(--black);font-weight:500;}
+.tab-btn:hover:not(.active){color:var(--gold);background:rgba(184,150,90,.04);}
+.cw{display:none;grid-template-columns:1fr 1fr;}
+.cw.active{display:grid;}
+.ci-form{padding:56px;border:1px solid var(--border);}
+.ci-form h3{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:400;margin-bottom:6px;}
+.ci-form .ci-desc{font-size:.8rem;color:var(--muted);margin-bottom:44px;line-height:1.7;}
+.fld{margin-bottom:32px;}
+.fld-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px;}
+.fld-lbl{font-size:.62rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.fld-val{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--gold);font-style:italic;}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:1px;background:var(--border);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);border:2px solid var(--black);box-shadow:0 0 0 1px var(--gold);}
+.co{background:var(--panel);padding:56px;border:1px solid var(--border);border-left:none;display:flex;flex-direction:column;justify-content:space-between;}
+.co-lbl{font-size:.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.co-val{font-family:'Playfair Display',serif;font-size:4rem;font-weight:400;color:var(--gold);line-height:1;margin-bottom:5px;}
+.co-sub{font-size:.72rem;color:var(--muted);margin-bottom:44px;}
+.co-rows{display:flex;flex-direction:column;}
+.co-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--border);}
+.co-row:first-child{border-top:1px solid var(--border);}
+.co-row .cl{font-size:.7rem;color:var(--muted);}
+.co-row .cv{font-family:'DM Mono',monospace;font-size:.82rem;}
+.co-row .cv.up{color:var(--green);}
+.co-row .cv.dn{color:var(--red);}
+.co-bar{height:2px;background:var(--border);margin-top:5px;overflow:hidden;border-radius:1px;}
+.co-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));transition:width .8s ease;}
+.co-fill.r{background:var(--red);}
+.c-note{font-size:.62rem;color:rgba(122,117,112,.45);margin-top:20px;font-style:italic;}
+
+/* OUTLOOK */
+#outlook{background:var(--dark);}
+.out-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:56px;}
+.out-g{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);}
+.oc{padding:44px 36px;border-right:1px solid var(--border);transition:background .3s;}
+.oc:last-child{border-right:none;}
+.oc:hover{background:rgba(184,150,90,.025);}
+.oc-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.oc-dt{font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.oc-tp{font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border:1px solid var(--border);color:var(--muted);}
+.oc h4{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:400;line-height:1.4;margin-bottom:14px;}
+.oc p{font-size:.78rem;color:var(--muted);line-height:1.75;font-weight:300;}
+.oc-tags{display:flex;gap:7px;margin-top:22px;flex-wrap:wrap;}
+.ot{font-size:.55rem;letter-spacing:1.2px;text-transform:uppercase;padding:3px 9px;border-radius:1px;border:1px solid;}
+.ot.bull{border-color:rgba(76,175,135,.3);color:var(--green);background:rgba(76,175,135,.05);}
+.ot.bear{border-color:rgba(192,80,77,.3);color:var(--red);background:rgba(192,80,77,.05);}
+.ot.neut{border-color:rgba(184,150,90,.3);color:var(--gold);background:rgba(184,150,90,.05);}
+
+/* NEWSLETTER */
+#newsletter{background:var(--black);}
+.nl-g{display:grid;grid-template-columns:1fr 1fr;gap:90px;}
+.nl-issues{display:flex;flex-direction:column;gap:0;margin-top:36px;}
+.nl-iss{padding:24px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:auto 1fr;gap:22px;}
+.nl-iss:first-child{border-top:1px solid var(--border);}
+.nl-n{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:1px;padding-top:3px;}
+.nl-iss h5{font-size:.86rem;font-weight:400;margin-bottom:5px;}
+.nl-iss p{font-size:.76rem;color:var(--muted);line-height:1.65;font-weight:300;}
+.nl-fw{padding:56px;background:var(--panel);border:1px solid var(--border);}
+.nl-fw h3{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;margin-bottom:7px;}
+.nl-fw .nl-sub{font-size:.8rem;color:var(--muted);margin-bottom:32px;line-height:1.7;}
+.nl-form{display:flex;flex-direction:column;gap:0;}
+.nl-inp{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--white);padding:15px 0;font-family:'Jost',sans-serif;font-size:.86rem;font-weight:300;outline:none;width:100%;transition:border-color .3s;margin-bottom:2px;}
+.nl-inp:focus{border-color:var(--gold);}
+.nl-inp::placeholder{color:rgba(122,117,112,.6);}
+select.nl-inp{cursor:pointer;}
+select.nl-inp option{background:var(--panel);}
+.nl-btn{margin-top:32px;background:var(--gold);color:var(--black);border:1px solid var(--gold);padding:15px 40px;font-family:'Jost',sans-serif;font-size:.68rem;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;width:100%;}
+.nl-btn:hover{background:transparent;color:var(--gold);}
+.nl-prv{font-size:.62rem;color:rgba(122,117,112,.45);margin-top:14px;line-height:1.6;}
+
+/* CONTACT */
+#contact{background:var(--dark);}
+.con-g{display:grid;grid-template-columns:1fr 1fr;gap:90px;margin-top:56px;}
+.con-info{padding-top:32px;}
+.ci-r{display:flex;gap:22px;align-items:flex-start;margin-bottom:32px;}
+.ci-bar{width:1px;height:36px;background:var(--gold);opacity:.35;flex-shrink:0;margin-top:3px;}
+.ci-r h6{font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.ci-r p{font-size:.88rem;font-weight:300;}
+.ci-r a{color:var(--white);text-decoration:none;transition:color .3s;}
+.ci-r a:hover{color:var(--gold);}
+.con-form{display:flex;flex-direction:column;padding-top:32px;}
+.cf-r2{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.ff{padding:18px 0;border-bottom:1px solid var(--border);}
+.ff-lbl{font-size:.58rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:7px;}
+.ff-inp{background:transparent;border:none;color:var(--white);padding:0;font-family:'Jost',sans-serif;font-size:.86rem;font-weight:300;outline:none;width:100%;}
+.ff-inp::placeholder{color:rgba(122,117,112,.4);}
+select.ff-inp{cursor:pointer;}
+select.ff-inp option{background:var(--panel);}
+textarea.ff-inp{resize:none;min-height:72px;}
+.cf-btn{margin-top:36px;background:transparent;color:var(--gold);border:1px solid rgba(184,150,90,.4);padding:16px 44px;font-family:'Jost',sans-serif;font-size:.68rem;font-weight:400;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;align-self:flex-start;}
+.cf-btn:hover{background:var(--gold);color:var(--black);}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid var(--border);padding:56px 64px;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:40px;}
+.f-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;margin-bottom:10px;}
+.f-reg{font-size:.62rem;color:var(--muted);line-height:1.7;max-width:270px;}
+.f-links{display:flex;gap:56px;}
+.fcol h6{font-size:.58rem;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:18px;}
+.fcol a{display:block;font-size:.76rem;color:var(--muted);text-decoration:none;margin-bottom:10px;transition:color .3s;}
+.fcol a:hover{color:var(--white);}
+.f-right{text-align:right;}
+.f-soc{display:flex;justify-content:flex-end;gap:12px;}
+.sb{width:34px;height:34px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.68rem;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .3s;cursor:pointer;}
+.sb:hover{border-color:var(--gold);color:var(--gold);}
+.f-copy{font-size:.62rem;color:var(--muted);margin-top:14px;line-height:1.6;}
+
+/* TOAST */
+.toast{position:fixed;bottom:36px;right:36px;z-index:999;background:var(--panel);border:1px solid var(--gold);border-left:3px solid var(--gold);padding:16px 26px;max-width:300px;transform:translateY(110%);opacity:0;transition:all .4s ease;}
+.toast.show{transform:translateY(0);opacity:1;}
+.t-ttl{font-size:.68rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;}
+.t-msg{font-size:.78rem;color:var(--muted);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* KEYFRAMES */
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* RESPONSIVE */
+@media(max-width:1060px){
+  .svc-g,.svc-g2{grid-template-columns:1fr;}
+  .si{border-right:none;border-bottom:1px solid var(--border);}
+  .split{grid-template-columns:1fr;}
+  .sr{padding:56px 40px;}
+  .res-wrap,.nl-g,.con-g{grid-template-columns:1fr;gap:48px;}
+  .out-g{grid-template-columns:1fr;}
+  .oc{border-right:none;border-bottom:1px solid var(--border);}
+  footer{grid-template-columns:1fr;padding:44px 32px;}
+  .f-right{text-align:left;}.f-soc{justify-content:flex-start;}
+}
+@media(max-width:768px){
+  nav{padding:18px 24px;}
+  nav.scrolled{padding:12px 24px;}
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .sp{padding:72px 24px;}.sp-sm{padding:44px 24px;}
+  .sl{padding:56px 24px;}
+  .ci-form{padding:36px 24px;}.co{padding:36px 24px;border-left:1px solid var(--border);border-top:none;}
+  .cw.active{grid-template-columns:1fr;}
+  .nl-fw{padding:36px 24px;}
+  footer{padding:36px 24px;}
+  .f-links{flex-direction:column;gap:28px;}
+  .cf-r2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="#services" onclick="closeMob()">Services</a>
+  <a href="#strategy" onclick="closeMob()">ETF Strategy</a>
+  <a href="#research" onclick="closeMob()">Research Sheet</a>
+  <a href="#tools" onclick="closeMob()">Calculators</a>
+  <a href="#newsletter" onclick="closeMob()">Newsletter</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">[Your Name] Advisory</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#strategy">ETF Strategy</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#tools">Calculators</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Connect With Us</button>
+  <button class="hamburger" onclick="document.getElementById('mobNav').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"><canvas id="heroCanvas"></canvas></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eye">Research Analyst &nbsp;·&nbsp; SEBI Registered &nbsp;·&nbsp; Mumbai, India</div>
+    <h1>Wealth Needs A<br><em>Smarter</em> Perspective</h1>
+    <p class="hero-sub">Research · Mutual Funds · ETF Strategy · Unlisted Shares · Insurance</p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-w">Discover Our Services</a>
+      <a href="#tools" class="btn-o">Free Calculators</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-ln"></div><span>Scroll</span></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="tick-track">
+    <span class="ti"><span class="tn">NIFTY 50</span><span class="tv">22,487</span><span class="tu">▲ +1.24%</span></span>
+    <span class="ti"><span class="tn">SENSEX</span><span class="tv">74,340</span><span class="tu">▲ +0.98%</span></span>
+    <span class="ti"><span class="tn">NIFTY BANK</span><span class="tv">48,210</span><span class="td">▼ −0.34%</span></span>
+    <span class="ti"><span class="tn">NIFTY IT</span><span class="tv">38,650</span><span class="tu">▲ +2.10%</span></span>
+    <span class="ti"><span class="tn">NIFTY MIDCAP</span><span class="tv">49,120</span><span class="tu">▲ +1.50%</span></span>
+    <span class="ti"><span class="tn">GOLD / 10g</span><span class="tv">₹62,480</span><span class="tu">▲ +0.60%</span></span>
+    <span class="ti"><span class="tn">USD / INR</span><span class="tv">83.24</span><span class="td">▼ −0.12%</span></span>
+    <span class="ti"><span class="tn">CRUDE OIL</span><span class="tv">$78.40</span><span class="td">▼ −0.82%</span></span>
+    <span class="ti"><span class="tn">NIFTY 50</span><span class="tv">22,487</span><span class="tu">▲ +1.24%</span></span>
+    <span class="ti"><span class="tn">SENSEX</span><span class="tv">74,340</span><span class="tu">▲ +0.98%</span></span>
+    <span class="ti"><span class="tn">NIFTY BANK</span><span class="tv">48,210</span><span class="td">▼ −0.34%</span></span>
+    <span class="ti"><span class="tn">NIFTY IT</span><span class="tv">38,650</span><span class="tu">▲ +2.10%</span></span>
+    <span class="ti"><span class="tn">NIFTY MIDCAP</span><span class="tv">49,120</span><span class="tu">▲ +1.50%</span></span>
+    <span class="ti"><span class="tn">GOLD / 10g</span><span class="tv">₹62,480</span><span class="tu">▲ +0.60%</span></span>
+    <span class="ti"><span class="tn">USD / INR</span><span class="tv">83.24</span><span class="td">▼ −0.12%</span></span>
+    <span class="ti"><span class="tn">CRUDE OIL</span><span class="tv">$78.40</span><span class="td">▼ −0.82%</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="sp">
+  <div class="svc-intro reveal">
+    <div class="s-lbl" style="justify-content:center">What We Do</div>
+    <h2 class="s-h">Comprehensive<br>Wealth <em>Intelligence</em></h2>
+    <p class="s-p">A complete financial ecosystem — research, mutual funds, ETF strategy, unlisted shares, insurance, and automated stock selection.</p>
+  </div>
+  <div class="svc-g reveal">
+    <div class="si"><span class="si-num">01</span><h3>Equity Research<br>& Analysis</h3><p>Institutional-grade fundamental and technical research delivered before market opens every morning — across all major sectors.</p><a href="#contact" class="si-lnk">Enquire</a></div>
+    <div class="si"><span class="si-num">02</span><h3>Mutual Fund<br>Distribution</h3><p>Curated MF portfolios aligned with your risk profile and goals. 60+ satisfied clients managed with discipline and data.</p><a href="#contact" class="si-lnk">Enquire</a></div>
+    <div class="si"><span class="si-num">03</span><h3>ETF Strategy &<br>Portfolio Management</h3><p>Low-cost, rules-based ETF strategies. Systematic monthly rebalancing with momentum-based sector allocation.</p><a href="#strategy" class="si-lnk">View Strategy</a></div>
+  </div>
+  <div class="svc-g2 reveal">
+    <div class="si"><span class="si-num">04</span><h3>Unlisted Shares</h3><p>Exclusive pre-IPO and unlisted share opportunities in high-growth companies — typically reserved for HNIs and institutions.</p><a href="#contact" class="si-lnk">Get Access</a></div>
+    <div class="si"><span class="si-num">05</span><h3>Insurance Planning</h3><p>Life, health, and term insurance solutions tailored to your needs — protecting your wealth and your family.</p><a href="#contact" class="si-lnk">Enquire</a></div>
+    <div class="si"><span class="si-num">06</span><h3>Daily Outlook &<br>Weekly Newsletter</h3><p>Morning market intelligence and a Saturday digest read by 1,000+ serious investors. Free to subscribe.</p><a href="#newsletter" class="si-lnk">Subscribe</a></div>
+  </div>
+</section>
+
+<!-- STRATEGY -->
+<section id="strategy">
+  <div class="split">
+    <div class="sl reveal">
+      <div class="s-lbl">ETF Strategy</div>
+      <h2 class="s-h">Rules-Based.<br>Emotion-Free.<br><em>Consistent.</em></h2>
+      <p class="s-p" style="margin-bottom:36px;">A systematic, quantitative approach using index ETFs with tactical momentum overlays — rebalanced monthly, transparent by design.</p>
+      <div class="strat-list">
+        <div class="strat-row"><span class="sn">01</span><div><h4>Momentum-Driven Selection</h4><p>ETFs ranked monthly by risk-adjusted momentum — no emotions, no biases.</p></div></div>
+        <div class="strat-row"><span class="sn">02</span><div><h4>Monthly Rebalancing</h4><p>Portfolio realigned every month to capture emerging sector rotation opportunities.</p></div></div>
+        <div class="strat-row"><span class="sn">03</span><div><h4>Capital Preservation Mode</h4><p>Strategy shifts to defensive ETFs automatically when market breadth deteriorates.</p></div></div>
+      </div>
+    </div>
+    <div class="sr reveal">
+      <div>
+        <div class="perf-hdr">Strategy Performance — Trailing 8 Months</div>
+        <div class="perf-big">+28.4%</div>
+        <div class="perf-sub">Annualised Return &nbsp;|&nbsp; Nifty 50: +16.3%</div>
+      </div>
+      <div class="perf-grid">
+        <div class="ps"><div class="pv">+12.1%</div><div class="pl">Alpha Generated</div></div>
+        <div class="ps"><div class="pv">0.71</div><div class="pl">Sharpe Ratio</div></div>
+        <div class="ps"><div class="pv" style="color:var(--muted)">−8.2%</div><div class="pl">Max Drawdown</div></div>
+        <div class="ps"><div class="pv">60+</div><div class="pl">Active Clients</div></div>
+      </div>
+      <div class="mini-chart">
+        <div class="mini-bars" id="stratBars"></div>
+        <div class="mini-lbl"><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH SHEET -->
+<section id="research" class="sp">
+  <div class="res-wrap">
+    <div class="sheet-box reveal">
+      <div class="sheet-top">
+        <span class="sheet-ttl">Auto Research Sheet · v3.2 · NSE / BSE</span>
+        <div class="live-pill"><div class="ld"></div>Live</div>
+      </div>
+      <div>
+        <div class="sr-row hdr"><div>Stock</div><div>Price</div><div>RSI</div><div>Score</div><div>Signal</div></div>
+        <div class="sr-row"><div>RELIANCE</div><div>2,847</div><div>62</div><div>8.4</div><div class="sig-b">BUY ↑</div></div>
+        <div class="sr-row"><div>HDFCBANK</div><div>1,530</div><div>58</div><div>7.9</div><div class="sig-b">BUY ↑</div></div>
+        <div class="sr-row"><div>INFY</div><div>1,620</div><div>71</div><div>8.1</div><div class="sig-b">BUY ↑</div></div>
+        <div class="sr-row"><div>TCS</div><div>3,980</div><div>54</div><div>6.8</div><div class="sig-w">WATCH →</div></div>
+        <div class="sr-row"><div>TITAN</div><div>3,240</div><div>78</div><div>5.2</div><div class="sig-a">AVOID ↓</div></div>
+        <div class="sr-row"><div>BAJFINANCE</div><div>6,870</div><div>65</div><div>8.8</div><div class="sig-b">BUY ↑</div></div>
+        <div class="sr-row"><div>SUNPHARMA</div><div>1,410</div><div>60</div><div>7.5</div><div class="sig-b">BUY ↑</div></div>
+      </div>
+      <div class="sheet-foot"><div class="live-pill"><div class="ld"></div>Updated Today · 9:15 AM</div><span>500+ stocks scanned daily</span></div>
+    </div>
+    <div class="res-txt reveal">
+      <div class="s-lbl">Proprietary Tool</div>
+      <h2 class="s-h">Automated<br>Stock <em>Intelligence</em></h2>
+      <p class="s-p">Our Google Sheet–based screener scans 500+ NSE/BSE stocks every morning across 12+ quantitative parameters to surface the highest-probability setups.</p>
+      <div class="res-buls">
+        <div class="rb"><div class="rb-ic">📡</div><div><h5>Live Data Integration</h5><p>Real-time NSE/BSE price, volume, and fundamental data — auto-refreshed.</p></div></div>
+        <div class="rb"><div class="rb-ic">🎯</div><div><h5>Multi-Factor Scoring</h5><p>RSI, MACD, PE, ROE, EPS growth, momentum, and institutional activity combined.</p></div></div>
+        <div class="rb"><div class="rb-ic">📲</div><div><h5>Morning WhatsApp Alerts</h5><p>High-score BUY signals delivered before market opens — never miss an opportunity.</p></div></div>
+        <div class="rb"><div class="rb-ic">🔒</div><div><h5>Exclusive Access Only</h5><p>Shared only with premium subscribers. Your alpha edge stays your edge.</p></div></div>
+      </div>
+      <button class="btn-w" style="margin-top:36px" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Sheet Access</button>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATORS -->
+<section id="tools" class="sp">
+  <div class="tools-top reveal">
+    <div><div class="s-lbl">Free Tools</div><h2 class="s-h">Plan Your<br><em>Financial Future</em></h2></div>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('sip',this)">SIP</button>
+      <button class="tab-btn" onclick="switchTab('lump',this)">Lumpsum</button>
+      <button class="tab-btn" onclick="switchTab('goal',this)">Goal Planner</button>
+      <button class="tab-btn" onclick="switchTab('emi',this)">EMI</button>
+    </div>
+  </div>
+
+  <!-- SIP -->
+  <div class="cw active" id="cw-sip">
+    <div class="ci-form"><h3>SIP Calculator</h3><p class="ci-desc">See how your monthly investment grows with the power of compounding.</p>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Monthly Investment</span><span class="fld-val" id="s1v">₹ 5,000</span></div><input type="range" id="s1r" min="500" max="100000" step="500" value="5000" oninput="calcSIP()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Expected Return (p.a.)</span><span class="fld-val" id="s2v">12 %</span></div><input type="range" id="s2r" min="1" max="30" step=".5" value="12" oninput="calcSIP()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Time Period</span><span class="fld-val" id="s3v">10 Yrs</span></div><input type="range" id="s3r" min="1" max="40" value="10" oninput="calcSIP()"></div>
+      <p class="c-note">* Indicative only. Mutual fund investments subject to market risk.</p>
+    </div>
+    <div class="co">
+      <div><div class="co-lbl">Total Corpus</div><div class="co-val" id="so1">₹11.6 L</div><div class="co-sub" id="so1s">After 10 years at 12% p.a.</div></div>
+      <div class="co-rows">
+        <div class="co-row"><span class="cl">Amount Invested</span><span class="cv" id="so2">₹6.0 L</span></div>
+        <div class="co-bar"><div class="co-fill r" id="sb1" style="width:52%"></div></div>
+        <div class="co-row"><span class="cl">Wealth Gained</span><span class="cv up" id="so3">₹5.6 L</span></div>
+        <div class="co-bar"><div class="co-fill" id="sb2" style="width:48%"></div></div>
+        <div class="co-row" style="margin-top:6px"><span class="cl">Return on Investment</span><span class="cv up" id="so4">+93.4%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lumpsum -->
+  <div class="cw" id="cw-lump">
+    <div class="ci-form"><h3>Lumpsum Calculator</h3><p class="ci-desc">Calculate the future value of a one-time investment with compound interest.</p>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Investment Amount</span><span class="fld-val" id="l1v">₹1,00,000</span></div><input type="range" id="l1r" min="10000" max="5000000" step="10000" value="100000" oninput="calcLump()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Expected Return (p.a.)</span><span class="fld-val" id="l2v">12 %</span></div><input type="range" id="l2r" min="1" max="30" step=".5" value="12" oninput="calcLump()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Time Period</span><span class="fld-val" id="l3v">10 Yrs</span></div><input type="range" id="l3r" min="1" max="40" value="10" oninput="calcLump()"></div>
+      <p class="c-note">* Indicative only. Past performance is not a guarantee of future results.</p>
+    </div>
+    <div class="co">
+      <div><div class="co-lbl">Future Value</div><div class="co-val" id="lo1">₹3.1 L</div><div class="co-sub" id="lo1s">After 10 years at 12% p.a.</div></div>
+      <div class="co-rows">
+        <div class="co-row"><span class="cl">Amount Invested</span><span class="cv" id="lo2">₹1.0 L</span></div>
+        <div class="co-bar"><div class="co-fill r" id="lb1" style="width:32%"></div></div>
+        <div class="co-row"><span class="cl">Wealth Gained</span><span class="cv up" id="lo3">₹2.1 L</span></div>
+        <div class="co-bar"><div class="co-fill" id="lb2" style="width:68%"></div></div>
+        <div class="co-row" style="margin-top:6px"><span class="cl">Absolute Return</span><span class="cv up" id="lo4">+210.8%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal -->
+  <div class="cw" id="cw-goal">
+    <div class="ci-form"><h3>Goal Planner</h3><p class="ci-desc">Know exactly how much to invest monthly to reach your financial target.</p>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Target Corpus</span><span class="fld-val" id="g1v">₹50 L</span></div><input type="range" id="g1r" min="100000" max="10000000" step="100000" value="5000000" oninput="calcGoal()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Expected Return (p.a.)</span><span class="fld-val" id="g2v">12 %</span></div><input type="range" id="g2r" min="6" max="24" step=".5" value="12" oninput="calcGoal()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Time Horizon</span><span class="fld-val" id="g3v">20 Yrs</span></div><input type="range" id="g3r" min="1" max="40" value="20" oninput="calcGoal()"></div>
+      <p class="c-note">* Based on constant SIP at fixed return. Actual results vary.</p>
+    </div>
+    <div class="co">
+      <div><div class="co-lbl">Monthly SIP Required</div><div class="co-val" id="go1">₹5,505</div><div class="co-sub" id="go1s">To reach ₹50 L in 20 years</div></div>
+      <div class="co-rows">
+        <div class="co-row"><span class="cl">Total Invested</span><span class="cv" id="go2">₹13.2 L</span></div>
+        <div class="co-bar"><div class="co-fill r" id="gb1" style="width:26%"></div></div>
+        <div class="co-row"><span class="cl">Wealth Gained</span><span class="cv up" id="go3">₹36.8 L</span></div>
+        <div class="co-bar"><div class="co-fill" id="gb2" style="width:74%"></div></div>
+        <div class="co-row" style="margin-top:6px"><span class="cl">Wealth Multiplier</span><span class="cv up" id="go4">3.8×</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMI -->
+  <div class="cw" id="cw-emi">
+    <div class="ci-form"><h3>EMI Calculator</h3><p class="ci-desc">Plan your home, car, or personal loan — understand the true cost of borrowing.</p>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Loan Amount</span><span class="fld-val" id="e1v">₹30 L</span></div><input type="range" id="e1r" min="100000" max="20000000" step="100000" value="3000000" oninput="calcEMI()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Interest Rate (p.a.)</span><span class="fld-val" id="e2v">8.5 %</span></div><input type="range" id="e2r" min="5" max="24" step=".1" value="8.5" oninput="calcEMI()"></div>
+      <div class="fld"><div class="fld-top"><span class="fld-lbl">Loan Tenure</span><span class="fld-val" id="e3v">20 Yrs</span></div><input type="range" id="e3r" min="1" max="30" value="20" oninput="calcEMI()"></div>
+      <p class="c-note">* For indicative purposes only. Actual EMI may differ by lender.</p>
+    </div>
+    <div class="co">
+      <div><div class="co-lbl">Monthly EMI</div><div class="co-val" id="eo1">₹26,035</div><div class="co-sub" id="eo1s">₹30 L at 8.5% for 20 years</div></div>
+      <div class="co-rows">
+        <div class="co-row"><span class="cl">Principal Amount</span><span class="cv" id="eo2">₹30.0 L</span></div>
+        <div class="co-bar"><div class="co-fill r" id="eb1" style="width:49%"></div></div>
+        <div class="co-row"><span class="cl">Total Interest</span><span class="cv dn" id="eo3">₹32.5 L</span></div>
+        <div class="co-bar"><div class="co-fill" id="eb2" style="width:51%;background:var(--red)"></div></div>
+        <div class="co-row" style="margin-top:6px"><span class="cl">Total Repayment</span><span class="cv" id="eo4">₹62.5 L</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTLOOK -->
+<section id="outlook" class="sp">
+  <div class="out-top reveal">
+    <div><div class="s-lbl">Daily Intelligence</div><h2 class="s-h">Market Outlook<br><em>Every Morning</em></h2></div>
+    <button class="btn-o" onclick="document.getElementById('newsletter').scrollIntoView({behavior:'smooth'})">Subscribe Free</button>
+  </div>
+  <div class="out-g reveal">
+    <div class="oc"><div class="oc-meta"><span class="oc-dt">Today · Daily Outlook</span><span class="oc-tp">Intraday</span></div><h4>Nifty faces key resistance at 22,500 — watch for breakout above</h4><p>Markets opened positive. FMCG and IT sectors leading. Banking consolidating near support with FII flows net positive for 3rd week.</p><div class="oc-tags"><span class="ot bull">Nifty IT ▲</span><span class="ot bull">FMCG ▲</span><span class="ot neut">Banking ↔</span></div></div>
+    <div class="oc"><div class="oc-meta"><span class="oc-dt">Weekly Wrap · Monday</span><span class="oc-tp">Weekly</span></div><h4>Pharma & Infra outperform — sector rotation clearly underway</h4><p>Budget-linked hopes driving domestic consumption. FII positive for 3rd consecutive week. Midcap clearly outperforming largecap.</p><div class="oc-tags"><span class="ot bull">Pharma ▲</span><span class="ot bull">Infra ▲</span><span class="ot bear">PSU ▼</span></div></div>
+    <div class="oc"><div class="oc-meta"><span class="oc-dt">Macro View · Q4 FY25</span><span class="oc-tp">Quarterly</span></div><h4>India GDP intact — midcap cycle enters acceleration phase</h4><p>Earnings upgrades across 60% of Nifty 500. Midcap and smallcap valuations still reasonable. Stay invested in quality.</p><div class="oc-tags"><span class="ot bull">Midcap ▲</span><span class="ot neut">Largecap ↔</span><span class="ot bull">Smallcap ▲</span></div></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter" class="sp">
+  <div class="nl-g">
+    <div class="reveal">
+      <div class="s-lbl">Weekly Newsletter</div>
+      <h2 class="s-h">The Weekly<br><em>Market Compass</em></h2>
+      <p class="s-p">Every Saturday — market intelligence, research ideas, and macro views. Read by 1,000+ serious investors.</p>
+      <div class="nl-issues">
+        <div class="nl-iss"><span class="nl-n">#48</span><div><h5>5 sectors to watch in Q4 — and the ETFs that capture them</h5><p>Sector rotation trends and specific ETF picks for momentum-focused investors this quarter.</p></div></div>
+        <div class="nl-iss"><span class="nl-n">#47</span><div><h5>Why unlisted shares outperform in early bull markets</h5><p>Historical analysis of pre-IPO returns versus listed peers — and what it means for your allocation.</p></div></div>
+        <div class="nl-iss"><span class="nl-n">#46</span><div><h5>The case for passive investing in a volatile macro environment</h5><p>How ETF strategies outperformed active funds during the recent rate cycle — with real data.</p></div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="nl-fw">
+        <h3>Subscribe Free</h3>
+        <p class="nl-sub">Weekly insights, stock ideas, and market views — every Saturday morning.</p>
+        <form class="nl-form" onsubmit="handleNL(event)">
+          <input type="text" class="nl-inp" placeholder="Full Name" required>
+          <input type="email" class="nl-inp" placeholder="Email Address" required>
+          <input type="tel" class="nl-inp" placeholder="WhatsApp Number (optional)">
+          <select class="nl-inp"><option value="">I am a...</option><option>First-time Investor</option><option>Active Trader</option><option>Long-term Wealth Builder</option><option>NRI Investor</option><option>Finance Professional</option></select>
+          <button type="submit" class="nl-btn">Subscribe — It's Free</button>
+          <p class="nl-prv">📩 No spam, ever. Unsubscribe anytime. Data never shared.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="sp">
+  <div class="s-lbl reveal">Get In Touch</div>
+  <h2 class="s-h reveal">Let's Build Your<br><em>Financial Future</em> Together</h2>
+  <div class="con-g">
+    <div class="reveal">
+      <p class="s-p" style="margin-bottom:44px">Whether you're investing for the first time or managing serious wealth, we bring institutional clarity to your financial decisions.</p>
+      <div class="con-info">
+        <div class="ci-r"><div class="ci-bar"></div><div><h6>Location</h6><p>Mumbai, Maharashtra, India</p></div></div>
+        <div class="ci-r"><div class="ci-bar"></div><div><h6>WhatsApp / Call</h6><a href="tel:+91XXXXXXXXXX"><p>+91 98XXX XXXXX</p></a></div></div>
+        <div class="ci-r"><div class="ci-bar"></div><div><h6>Email</h6><a href="mailto:research@yourname.in"><p>research@yourname.in</p></a></div></div>
+        <div class="ci-r"><div class="ci-bar"></div><div><h6>Market Hours Support</h6><p>Mon – Fri &nbsp;|&nbsp; 9:00 AM – 6:00 PM IST</p></div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <form class="con-form" onsubmit="handleContact(event)">
+        <div class="cf-r2">
+          <div class="ff"><label class="ff-lbl">Full Name</label><input type="text" class="ff-inp" placeholder="Ramesh Sharma" required></div>
+          <div class="ff"><label class="ff-lbl">Email</label><input type="email" class="ff-inp" placeholder="you@email.com" required></div>
+        </div>
+        <div class="ff"><label class="ff-lbl">Phone / WhatsApp</label><input type="tel" class="ff-inp" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="ff"><label class="ff-lbl">I'm Interested In</label><select class="ff-inp"><option value="">Select a service...</option><option>Mutual Fund Investment</option><option>ETF Strategy</option><option>Research Sheet Access</option><option>Unlisted Shares</option><option>Insurance Planning</option><option>Newsletter Only</option><option>General Advisory</option></select></div>
+        <div class="ff"><label class="ff-lbl">Message</label><textarea class="ff-inp" placeholder="Tell us about your financial goals..." rows="3"></textarea></div>
+        <button type="submit" class="cf-btn">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-logo">[Your Name] Advisory</div>
+    <p class="f-reg">SEBI Registered Research Analyst · ARN: XXXXXX · Mumbai, India<br><br>All investments subject to market risk. Please read all scheme documents carefully. Past performance is not indicative of future returns.</p>
+  </div>
+  <div class="f-links">
+    <div class="fcol"><h6>Services</h6><a href="#services">Equity Research</a><a href="#services">Mutual Funds</a><a href="#strategy">ETF Strategy</a><a href="#services">Unlisted Shares</a><a href="#services">Insurance</a></div>
+    <div class="fcol"><h6>Resources</h6><a href="#tools">Calculators</a><a href="#newsletter">Newsletter</a><a href="#outlook">Market Outlook</a><a href="#research">Research Sheet</a><a href="#contact">Contact Us</a></div>
+  </div>
+  <div class="f-right">
+    <div class="f-soc">
+      <a href="#" class="sb">in</a><a href="#" class="sb">𝕏</a><a href="#" class="sb">W</a><a href="#" class="sb">✈</a>
+    </div>
+    <p class="f-copy">© 2025 [Your Name] Advisory<br>All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="t-ttl">Done</div><div class="t-msg" id="tMsg"></div></div>
+
+<script>
+/* CURSOR */
+const c=document.getElementById('cur'),cr=document.getElementById('cur-ring');
+document.addEventListener('mousemove',e=>{
+  c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';
+  setTimeout(()=>{cr.style.left=e.clientX+'px';cr.style.top=e.clientY+'px';},80);
+});
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cr.style.transform='translate(-50%,-50%) scale(1.7)';cr.style.opacity='.4';});
+  el.addEventListener('mouseleave',()=>{cr.style.transform='translate(-50%,-50%) scale(1)';cr.style.opacity='1';});
+});
+
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+
+/* MOBILE NAV */
+function closeMob(){document.getElementById('mobNav').classList.remove('open');}
+
+/* HERO CANVAS */
+const cv=document.getElementById('heroCanvas'),ctx=cv.getContext('2d');
+let W,H,pts;
+function initC(){W=cv.width=innerWidth;H=cv.height=innerHeight;pts=Array.from({length:50},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28}));}
+function drawC(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,1.1,0,Math.PI*2);ctx.fillStyle='rgba(184,150,90,.3)';ctx.fill();});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
+    if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+      ctx.strokeStyle=`rgba(184,150,90,${(1-d/110)*.1})`;ctx.lineWidth=.5;ctx.stroke();}
+  }
+  requestAnimationFrame(drawC);
+}
+initC();drawC();window.addEventListener('resize',initC);
+
+/* STRATEGY BARS */
+const bd=[52,38,-15,72,55,88,40,95];
+const sb=document.getElementById('stratBars');
+bd.forEach(v=>{const b=document.createElement('div');b.className='bar-m'+(v<0?' neg':'');b.style.height='0';sb.appendChild(b);setTimeout(()=>{b.style.height=Math.abs(v)/100*72+'px';},700);});
+
+/* CALC TABS */
+function switchTab(id,btn){
+  document.querySelectorAll('.cw').forEach(w=>w.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('cw-'+id).classList.add('active');btn.classList.add('active');
+}
+
+/* FMT */
+function fmt(n){
+  if(n>=10000000)return'₹'+(n/10000000).toFixed(2)+' Cr';
+  if(n>=100000)return'₹'+(n/100000).toFixed(1)+' L';
+  if(n>=1000)return'₹'+(n/1000).toFixed(1)+' K';
+  return'₹'+Math.round(n).toLocaleString('en-IN');
+}
+
+/* SIP */
+function calcSIP(){
+  const a=+document.getElementById('s1r').value,r=+document.getElementById('s2r').value,y=+document.getElementById('s3r').value;
+  document.getElementById('s1v').textContent='₹ '+a.toLocaleString('en-IN');
+  document.getElementById('s2v').textContent=r+' %';
+  document.getElementById('s3v').textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,corpus=a*((Math.pow(1+mr,n)-1)/mr)*(1+mr),inv=a*n,gain=corpus-inv;
+  document.getElementById('so1').textContent=fmt(corpus);
+  document.getElementById('so1s').textContent='After '+y+' years at '+r+'% p.a.';
+  document.getElementById('so2').textContent=fmt(inv);
+  document.getElementById('so3').textContent=fmt(gain);
+  document.getElementById('so4').textContent='+'+(gain/inv*100).toFixed(1)+'%';
+  document.getElementById('sb1').style.width=(inv/corpus*100)+'%';
+  document.getElementById('sb2').style.width=(gain/corpus*100)+'%';
+}
+
+/* LUMP */
+function calcLump(){
+  const a=+document.getElementById('l1r').value,r=+document.getElementById('l2r').value,y=+document.getElementById('l3r').value;
+  document.getElementById('l1v').textContent='₹ '+a.toLocaleString('en-IN');
+  document.getElementById('l2v').textContent=r+' %';document.getElementById('l3v').textContent=y+' Yrs';
+  const fv=a*Math.pow(1+r/100,y),gain=fv-a;
+  document.getElementById('lo1').textContent=fmt(fv);
+  document.getElementById('lo1s').textContent='After '+y+' years at '+r+'% p.a.';
+  document.getElementById('lo2').textContent=fmt(a);document.getElementById('lo3').textContent=fmt(gain);
+  document.getElementById('lo4').textContent='+'+(gain/a*100).toFixed(1)+'%';
+  document.getElementById('lb1').style.width=(a/fv*100)+'%';
+  document.getElementById('lb2').style.width=(gain/fv*100)+'%';
+}
+
+/* GOAL */
+function calcGoal(){
+  const t=+document.getElementById('g1r').value,r=+document.getElementById('g2r').value,y=+document.getElementById('g3r').value;
+  document.getElementById('g1v').textContent=fmt(t);
+  document.getElementById('g2v').textContent=r+' %';document.getElementById('g3v').textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,sipv=t*mr/((Math.pow(1+mr,n)-1)*(1+mr)),inv=sipv*n,gain=t-inv;
+  document.getElementById('go1').textContent='₹'+Math.round(sipv).toLocaleString('en-IN');
+  document.getElementById('go1s').textContent='To reach '+fmt(t)+' in '+y+' years';
+  document.getElementById('go2').textContent=fmt(inv);document.getElementById('go3').textContent=fmt(gain);
+  document.getElementById('go4').textContent=(t/inv).toFixed(1)+'×';
+  document.getElementById('gb1').style.width=(inv/t*100).toFixed(0)+'%';
+  document.getElementById('gb2').style.width=(gain/t*100).toFixed(0)+'%';
+}
+
+/* EMI */
+function calcEMI(){
+  const p=+document.getElementById('e1r').value,r=+document.getElementById('e2r').value,y=+document.getElementById('e3r').value;
+  document.getElementById('e1v').textContent=fmt(p);
+  document.getElementById('e2v').textContent=r+' %';document.getElementById('e3v').textContent=y+' Yrs';
+  const mr=r/12/100,n=y*12,emi=p*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1),tot=emi*n,int=tot-p;
+  document.getElementById('eo1').textContent='₹'+Math.round(emi).toLocaleString('en-IN');
+  document.getElementById('eo1s').textContent=fmt(p)+' at '+r+'% for '+y+' years';
+  document.getElementById('eo2').textContent=fmt(p);document.getElementById('eo3').textContent=fmt(int);
+  document.getElementById('eo4').textContent=fmt(tot);
+  document.getElementById('eb1').style.width=(p/tot*100)+'%';
+  document.getElementById('eb2').style.width=(int/tot*100)+'%';
+}
+calcSIP();calcLump();calcGoal();calcEMI();
+
+/* SCROLL REVEAL */
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+/* TOAST */
+function toast(msg){document.getElementById('tMsg').textContent=msg;const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4500);}
+function handleNL(e){e.preventDefault();toast('Subscribed! Check your inbox for confirmation.');e.target.reset();}
+function handleContact(e){e.preventDefault();toast("Message received. We'll be in touch within 24 hours.");e.target.reset();}
+</script>
+</body>
+</html>
